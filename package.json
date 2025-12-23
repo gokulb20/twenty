@@ -195,7 +195,7 @@
     "yarn": ">=4.0.2"
   },
   "license": "AGPL-3.0",
-  "name": "twenty",
+  "name": "crewm8",
   "packageManager": "yarn@4.9.2",
   "resolutions": {
     "graphql": "16.8.1",
@@ -208,26 +208,26 @@
   "version": "0.2.1",
   "nx": {},
   "scripts": {
-    "docs:generate": "tsx packages/twenty-docs/scripts/generate-docs-json.ts",
-    "docs:generate-navigation-template": "tsx packages/twenty-docs/scripts/generate-navigation-template.ts",
-    "start": "npx concurrently --kill-others 'npx nx run-many -t start -p twenty-server twenty-front' 'npx wait-on tcp:3000 && npx nx run twenty-server:worker'"
+    "docs:generate": "tsx packages/crewm8-docs/scripts/generate-docs-json.ts",
+    "docs:generate-navigation-template": "tsx packages/crewm8-docs/scripts/generate-navigation-template.ts",
+    "start": "npx concurrently --kill-others 'npx nx run-many -t start -p crewm8-server crewm8-front' 'npx wait-on tcp:3000 && npx nx run crewm8-server:worker'"
   },
   "workspaces": {
     "packages": [
-      "packages/twenty-front",
-      "packages/twenty-server",
-      "packages/twenty-emails",
-      "packages/twenty-ui",
-      "packages/twenty-utils",
-      "packages/twenty-zapier",
-      "packages/twenty-website",
-      "packages/twenty-docs",
-      "packages/twenty-e2e-testing",
-      "packages/twenty-shared",
-      "packages/twenty-sdk",
-      "packages/twenty-apps",
-      "packages/twenty-cli",
-      "packages/create-twenty-app",
+      "packages/crewm8-front",
+      "packages/crewm8-server",
+      "packages/crewm8-emails",
+      "packages/crewm8-ui",
+      "packages/crewm8-utils",
+      "packages/crewm8-zapier",
+      "packages/crewm8-website",
+      "packages/crewm8-docs",
+      "packages/crewm8-e2e-testing",
+      "packages/crewm8-shared",
+      "packages/crewm8-sdk",
+      "packages/crewm8-apps",
+      "packages/crewm8-cli",
+      "packages/create-crewm8-app",
       "tools/eslint-rules"
     ]
   }
