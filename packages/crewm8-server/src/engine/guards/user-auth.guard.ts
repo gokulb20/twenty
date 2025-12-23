@@ -1,15 +1,14 @@
-import { type CanActivate, type ExecutionContext } from '@nestjs/common';
-import { GqlExecutionContext } from '@nestjs/graphql';
+import { Injectable, type CanActivate, type ExecutionContext, Logger } from '@nestjs/common';
 
-import { type Observable } from 'rxjs';
-
+@Injectable()
 export class UserAuthGuard implements CanActivate {
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    const ctx = GqlExecutionContext.create(context);
-    const request = ctx.getContext().req;
+  private readonly logger = new Logger(UserAuthGuard.name);
 
-    return request.user !== undefined;
+  constructor() {
+    this.logger.log('🚫 User Auth BYPASSED - Using 0.email authentication');
+  }
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    return true; // Always allow - auth handled by 0.email
   }
 }

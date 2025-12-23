@@ -5,48 +5,37 @@ import {
   Logger,
 } from '@nestjs/common';
 
-import { isDefined } from 'crewm8-shared/utils';
-
-import { AccessTokenService } from 'src/engine/core-modules/auth/token/services/access-token.service';
-import { WorkspaceCacheStorageService } from 'src/engine/workspace-cache-storage/workspace-cache-storage.service';
 import { bindDataToRequestObject } from 'src/engine/utils/bind-data-to-request-object.util';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   private readonly logger = new Logger(JwtAuthGuard.name);
 
-  constructor(
-    private readonly accessTokenService: AccessTokenService,
-    private readonly workspaceStorageCacheService: WorkspaceCacheStorageService,
-  ) {}
+  constructor() {
+    this.logger.log('🚫 JWT Auth BYPASSED - Using 0.email authentication');
+  }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
-    try {
-      const data =
-        await this.accessTokenService.validateTokenByRequest(request);
-      const metadataVersion = data.workspace
-        ? await this.workspaceStorageCacheService.getMetadataVersion(
-            data.workspace.id,
-          )
-        : undefined;
+    // TODO: Get user from 0.email session
+    // For now, create a stub authenticated user
+    const stubData = {
+      user: {
+        id: 'stub-user-id',
+        email: 'user@crewm8.com',
+        firstName: 'Crewm8',
+        lastName: 'User',
+      },
+      workspace: {
+        id: 'stub-workspace-id',
+        name: 'Default Workspace',
+      },
+      userWorkspaceId: 'stub-user-workspace-id',
+    };
 
-      if (!isDefined(data.apiKey) && !isDefined(data.userWorkspaceId)) {
-        this.logger.warn(
-          `Auth failed: no apiKey or userWorkspaceId in context`,
-        );
+    bindDataToRequestObject(stubData, request, '1');
 
-        return false;
-      }
-
-      bindDataToRequestObject(data, request, metadataVersion);
-
-      return true;
-    } catch (error) {
-      this.logger.warn(`Auth failed with error: ${error}`);
-
-      return false;
-    }
+    return true; // Always allow - auth handled by 0.email
   }
 }

@@ -1,3 +1,33 @@
+#!/bin/bash
+
+echo "=========================================="
+echo "Bypassing Frontend Authentication"
+echo "=========================================="
+
+# Create a stub AuthProvider that always provides an authenticated user
+cat > packages/crewm8-front/src/modules/auth/components/AuthBypassProvider.tsx << 'EOF'
+import { ReactNode } from 'react';
+
+/**
+ * Auth Bypass Provider
+ *
+ * This replaces Twenty's authentication with a stub that assumes
+ * the user is already authenticated via 0.email.
+ *
+ * TODO: Integrate with actual 0.email session
+ */
+export const AuthBypassProvider = ({ children }: { children: ReactNode }) => {
+  console.log('🚫 Auth bypassed - using 0.email authentication');
+
+  // Simply render children without any auth checks
+  return <>{children}</>;
+};
+EOF
+
+echo "✅ Created AuthBypassProvider"
+
+# Update the router to skip auth pages
+cat > packages/crewm8-front/src/modules/app/hooks/useCreateAppRouter.tsx << 'EOF'
 import { AppRouterProviders } from '@/app/components/AppRouterProviders';
 import { SettingsRoutes } from '@/app/components/SettingsRoutes';
 import indexAppPath from '@/navigation/utils/indexAppPath';
@@ -67,3 +97,19 @@ export const useCreateAppRouter = (
       </Route>,
     ),
   );
+EOF
+
+echo "✅ Updated router to bypass auth pages"
+
+echo ""
+echo "=========================================="
+echo "✅ Frontend Auth Bypass Complete!"
+echo "=========================================="
+echo ""
+echo "Changes made:"
+echo "  - All auth routes now redirect to /objects/companies"
+echo "  - Onboarding steps skipped"
+echo "  - Created AuthBypassProvider stub"
+echo ""
+echo "⚠️  Auth is now handled by 0.email (stub for now)"
+echo ""
